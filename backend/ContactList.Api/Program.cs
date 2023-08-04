@@ -1,37 +1,20 @@
-using ContactList.Api.Contacts.Models;
-using ContactList.Api.Contacts.Services;
-using ContactList.Api.Contacts.Validators;
-using ContactList.Api.Dictionaries.Services;
-using ContactList.Domain.Repositories;
-using ContactList.Infrastructure;
-using ContactList.Infrastructure.Repositories;
-using FluentValidation;
-using FluentValidation.AspNetCore;
+using ContactList.Api.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
-
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<IValidator<ContactDto>, ContactDtoValidator>();
-builder.Services.AddScoped<IValidator<ContactUpsertDto>, ContactUpsertDtoValidator>();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-builder.Services.AddScoped<IContactService, ContactService>();
-builder.Services.AddScoped<IDictionaryService, DictionaryService>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
-builder.Services.AddScoped<IDictionaryRepository, DictionaryRepository>();
-
-builder.Services.AddDbContext<ContactListDbContext>();
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
