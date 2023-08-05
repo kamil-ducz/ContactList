@@ -25,8 +25,8 @@ export class ContactDetailsComponent implements OnInit {
   contactSubCategories: ContactSubCategory[] = [];
   currentContactCategoryName: string = "";
   currentContactSubCategoryName: string = "";
-
   contactDetailsFormGroup!: FormGroup;
+  currentContactDateOfBirth!: Date;
 
   ngOnInit(): void {
     this.route.params.subscribe(
@@ -119,6 +119,9 @@ export class ContactDetailsComponent implements OnInit {
   }
 
   async initializeContactFormGroup() {
+    const dateOfBirthString = this.currentContact.dateOfBirth;
+    const dateOfBirth = new Date(dateOfBirthString);
+    //const formattedDateOfBirth = this.datePipe.transform(dateOfBirth, 'short');
     console.log("this.currentContact" + JSON.stringify(this.currentContact));
     this.contactDetailsFormGroup = new FormGroup({
       firstName: new FormControl(this.currentContact?.firstName || '', [
@@ -154,7 +157,7 @@ export class ContactDetailsComponent implements OnInit {
         Validators.maxLength(20),
         // TODO regex like in Fluent Validation on backend
       ]),
-      dateOfBirth: new FormControl(this.currentContact?.dateOfBirth || '', [
+      dateOfBirth: new FormControl(dateOfBirth || '', [
         Validators.required,
         // TODO 100 years old condition
       ])
