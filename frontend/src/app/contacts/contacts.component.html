@@ -2,7 +2,9 @@
 <ul *ngFor="let contact of contacts">
     <li>
         <a class="btn btn-dark" [routerLink]="['/contact-details/', contact.id]">
-            {{ contact.firstName }} {{ contact.lastName }}, category: {{ contact.categoryId }}, subCategory: {{ contact.subCategoryId }}
+            {{ contact.firstName }} {{ contact.lastName }} | 
+            category: {{ findCategoryNameById(contact.categoryId) }}
+            <span *ngIf="isSubCategoryEmpty(contact.subCategoryId)"> | sub category: {{ findSubCategoryNameById(contact.subCategoryId) }}</span> 
         </a>
     </li>
 </ul>

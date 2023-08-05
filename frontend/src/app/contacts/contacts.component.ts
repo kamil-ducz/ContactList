@@ -54,4 +54,18 @@ export class ContactsComponent implements OnInit {
       }
     );
   }
+
+  findCategoryNameById(categoryId: number): string {
+    const category = this.contactCategories.find(c => c.id === categoryId);
+    return category ? category.name : 'Category not found';
+  }
+
+  findSubCategoryNameById(subCategoryId: number): string {
+    const subCategory = this.contactSubCategories.find(sc => sc.id === subCategoryId);
+    return subCategory ? subCategory.name : 'Sub category not found. It is available only for Work category';
+  }
+
+  isSubCategoryEmpty(subCategoryId: number): boolean {
+    return this.contactSubCategories.find(sc => sc.id === subCategoryId) ? true : false;
+  }
 }
