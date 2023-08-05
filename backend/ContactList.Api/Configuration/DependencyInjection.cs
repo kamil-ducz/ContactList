@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddSwaggerGen();
 
         services.AddControllers();
+        services.AddCors();
 
         services.AddFluentValidationAutoValidation();
         services.AddScoped<IValidator<ContactDto>, ContactDtoValidator>();
