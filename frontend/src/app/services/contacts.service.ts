@@ -13,7 +13,7 @@ export class ContactsService {
     ) {}
 
     getContacts(): Observable<Contact[]> {
-        return this.httpClient.get<Contact[]>('https://localhost:7120/api/Contact')
+        return this.httpClient.get<Contact[]>('Contact')
     }
 
 }
