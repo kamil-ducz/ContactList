@@ -12,13 +12,15 @@ import { ToastrModule } from 'ngx-toastr';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ContactDetailsComponent } from './contacts/contact-details/contact-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ContactNewComponent } from './contacts/contact-new/contact-new.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ContactsComponent,
     HeaderComponent,
-    ContactDetailsComponent
+    ContactDetailsComponent,
+    ContactNewComponent
   ],
   imports: [
     BrowserModule,
