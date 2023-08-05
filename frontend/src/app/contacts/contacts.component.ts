@@ -16,8 +16,7 @@ export class ContactsComponent implements OnInit {
 
   contacts: Contact[] = [];
 
-  ngOnInit() {
-    this.toastrService.success("Contacts fetched successfully");
+  ngOnInit() {    
     this.fetchContacts();
   }
 
@@ -25,6 +24,7 @@ export class ContactsComponent implements OnInit {
     this.contactService.getContacts().subscribe(
       (response: Contact[]) => {
         this.contacts = response;
+        this.toastrService.success("Contacts fetched successfully");
       }
     );
   }
