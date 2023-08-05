@@ -1,0 +1,44 @@
+<form *ngIf="currentContact" #contactDetailsForm="ngForm" [formGroup]="contactDetailsFormGroup" (ngSubmit)="onSubmitContactDetails(contactDetailsForm.value)" class="mx-auto w-50">
+    <div class="form-group">
+      <label>First Name</label>
+      <input type="text" minlength="3" maxlength="15" class="form-control" formControlName="firstName">
+    </div>
+    <div class="form-group">
+      <label>Last Name</label>
+      <input type="text" minlength="3" maxlength="30" class="form-control" formControlName="lastName">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" minlength="10" maxlength="30" class="form-control" formControlName="email">
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" minlength="8" maxlength="100" class="form-control" formControlName="password">
+    </div>
+    <div class="form-group">
+        <label>Contact Category</label>
+        <select formControlName="category" class="form-select" (change)="onCategoryChange()">
+            <option *ngFor="let category of contactCategories" [selected]="category.name === findCategoryNameById(currentContact.categoryId)">{{ category.name }}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Contact Sub-Category</label>
+        <div>
+            <select formControlName="subCategory" class="form-select">
+                <option *ngFor="let subCategory of contactSubCategories" [selected]="subCategory.name === findSubCategoryNameById(currentContact.categoryId)">{{ subCategory.name }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" minlength="9" maxlength="20" class="form-control" formControlName="phoneNumber">
+    </div>
+    <div class="form-group">
+        <label>Date of Birth</label>
+        <input type="date" class="form-control" formControlName="dateOfBirth">
+    </div>
+    <button type="submit" class="btn btn-success my-4">Save changes</button>
+    <a href="#" class="btn btn-warning mx-4">Return to main page</a>
+  </form>
+
+  currentContactId = {{ currentContactId }}

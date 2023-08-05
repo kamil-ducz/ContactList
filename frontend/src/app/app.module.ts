@@ -10,19 +10,24 @@ import { ApiInterceptor } from './interceptors/api.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { ContactDetailsComponent } from './contacts/contact-details/contact-details.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     ContactsComponent,
-    HeaderComponent
+    HeaderComponent,
+    ContactDetailsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-	  ToastrModule.forRoot()
+	  ToastrModule.forRoot(),
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },

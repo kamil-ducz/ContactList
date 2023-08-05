@@ -49,8 +49,6 @@ export class ContactsComponent implements OnInit {
       (response: Contact[]) => {
         this.contacts = response;
         this.toastrService.success("Contacts fetched successfully");
-        console.log("this.contactCategories" + JSON.stringify(this.contactCategories));
-        console.log("this.contactSubCategories" + JSON.stringify(this.contactSubCategories));
       }
     );
   }
