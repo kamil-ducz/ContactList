@@ -1,0 +1,8 @@
+<h1>List of all contacts:</h1>
+<ul *ngFor="let contact of contacts">
+    <li>
+        <a class="btn btn-dark" [routerLink]="['/contact-details/', contact.id]">
+            {{ contact.firstName }} {{ contact.lastName }}, category: {{ contact.categoryId }}, subCategory: {{ contact.subCategoryId }}
+        </a>
+    </li>
+</ul>
