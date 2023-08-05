@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Contact } from '../models/contact.model';
 import { ContactsService } from '../services/contacts.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-contacts',
@@ -9,12 +10,14 @@ import { ContactsService } from '../services/contacts.service';
 })
 export class ContactsComponent implements OnInit {
   constructor(
-    private contactService: ContactsService
+    private contactService: ContactsService,
+    private toastrService: ToastrService
   ) {}
 
   contacts: Contact[] = [];
 
   ngOnInit() {
+    this.toastrService.success("Contacts fetched successfully");
     this.fetchContacts();
   }
 
