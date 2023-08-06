@@ -18,4 +18,15 @@ export class ContactsService {
         return this.httpClient.get<Contact>('Contact/' + contactId);
     }
 
+    postContact(contact: Contact): Observable<Contact> {
+        return this.httpClient.post<Contact>('Contact', contact);
+    }
+
+    updateContact(contact: Contact, contactId: number): Observable<Contact> {
+        return this.httpClient.put<Contact>('Contact/' + contactId, contact);
+    }
+
+    deleteContact(contactId: number): Observable<Contact> {
+        return this.httpClient.delete<Contact>('Contact/' + contactId);
+    }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ContactCategory } from 'src/app/models/contact.category.model';
 import { Contact } from 'src/app/models/contact.model';
 import { ContactSubCategory } from 'src/app/models/contact.sub.category.model';
@@ -15,8 +16,10 @@ import { DictionaryService } from 'src/app/services/dictionary.service';
 export class ContactDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private contactService: ContactsService,
-    private dictionaryService: DictionaryService
+    private dictionaryService: DictionaryService,
+    private toastr: ToastrService
   ) {}
 
   currentContact!: Contact;
@@ -154,13 +157,21 @@ export class ContactDetailsComponent implements OnInit {
       phoneNumber: new FormControl(this.currentContact?.phoneNumber || '', [
         Validators.required,
         Validators.minLength(9),
-        Validators.maxLength(20),
-        // TODO regex like in Fluent Validation on backend
+        Validators.maxLength(20)
       ]),
       dateOfBirth: new FormControl(dateOfBirth || '', [
         Validators.required,
         // TODO 100 years old condition
       ])
     });
+  }
+
+  removeContact(contactId: number) {
+    this.contactService.deleteContact(contactId).subscribe(
+      () => {
+        this.toastr.success(`Contact ${this.currentContact.firstName} ${this.currentContact.lastName} deleted successfully`);
+        this.router.navigate(['contacts']);
+      }
+    )
   }
 }

@@ -88,8 +88,7 @@ export class ContactNewComponent implements OnInit {
       phoneNumber: new FormControl('', [
         Validators.required,
         Validators.minLength(9),
-        Validators.maxLength(20),
-        // TODO regex like in Fluent Validation on backend
+        Validators.maxLength(20)
       ]),
       dateOfBirth: new FormControl('', [
         Validators.required,
