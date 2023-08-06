@@ -29,8 +29,18 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   private handleErrorResponse(error: HttpErrorResponse): void {
+    if (error.status === 401)
+    {
+      this.toastr.error("Only for logged users");
+      return;
+    }
     if (error.status === 404) {
       this.toastr.error("Resource not found");
+      return;
+    }
+    if (error.status === 409)
+    {
+      this.toastr.error("Contact with this email already exists");
       return;
     }
     if (error.status === 500) {
