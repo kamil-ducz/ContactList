@@ -13,6 +13,7 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ContactDetailsComponent } from './contacts/contact-details/contact-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ContactNewComponent } from './contacts/contact-new/contact-new.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ContactNewComponent } from './contacts/contact-new/contact-new.componen
     ContactsComponent,
     HeaderComponent,
     ContactDetailsComponent,
-    ContactNewComponent
+    ContactNewComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
