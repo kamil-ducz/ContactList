@@ -2,6 +2,8 @@
 using ContactList.Api.Contacts.Services;
 using ContactList.Api.Contacts.Validators;
 using ContactList.Api.Dictionaries.Services;
+using ContactList.Api.Users.Authorization;
+using ContactList.Api.Users.Services;
 using ContactList.Domain.Repositories;
 using ContactList.Infrastructure;
 using ContactList.Infrastructure.Repositories;
@@ -21,12 +23,14 @@ public static class DependencyInjection
 
         services.AddControllers();
         services.AddCors();
+        services.AddScoped<IJwtUtils, JwtUtils>();
 
         services.AddFluentValidationAutoValidation();
         services.AddScoped<IValidator<ContactDto>, ContactDtoValidator>();
         services.AddScoped<IValidator<ContactUpsertDto>, ContactUpsertDtoValidator>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IContactService, ContactService>();
         services.AddScoped<IDictionaryService, DictionaryService>();
         services.AddScoped<IContactRepository, ContactRepository>();
