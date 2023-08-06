@@ -10,6 +10,7 @@ import { Contact } from 'src/app/models/contact.model';
 export class AuthenticationService {
     private userSubject: BehaviorSubject<Contact | null>;
     public user: Observable<Contact | null>;
+    token?: string;
 
     constructor(
         private router: Router,
@@ -39,4 +40,14 @@ export class AuthenticationService {
         this.userSubject.next(null);
         this.router.navigate(['/contacts']);
     }
+
+    getToken(): string | undefined {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          const token = user?.token;
+          return token;
+        }
+        return undefined;
+      }
 }
