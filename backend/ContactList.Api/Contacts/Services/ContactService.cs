@@ -11,7 +11,7 @@ public interface IContactService
     IReadOnlyCollection<ContactDto> GetContacts();
     ContactDto GetContact(int contactId);
     int InsertContact(ContactUpsertDto contact);
-    void UpdateContact(int contactId, ContactUpsertDto contact);
+    void UpdateContact(ContactUpsertDto contact, int contactId);
     void DeleteContact(int contactId);
 }
 
@@ -42,14 +42,16 @@ public class ContactService : IContactService
         return contactToInsert.Id;
     }
 
-    public void UpdateContact(int contactId, ContactUpsertDto contact)
+    public void UpdateContact(ContactUpsertDto contactDto, int contactId)
     {
-        var contactToUpdate = _mapper.Map<Contact>(GetContact(contactId));
-        _contactRepository.UpdateContact(contactToUpdate);
+        var contact = _contactRepository.GetContact(contactId);
+        _mapper.Map(contactDto, contact);
+        _contactRepository.UpdateContact(contact);
     }
 
     public void DeleteContact(int contactId)
     {
-        _contactRepository.DeleteContact(_mapper.Map<Contact>(GetContact(contactId)));
+        var contactToDelete = _contactRepository.GetContact(contactId);
+        _contactRepository.DeleteContact(contactToDelete);
     }
 }

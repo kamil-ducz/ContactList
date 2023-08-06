@@ -4,7 +4,7 @@ namespace ContactList.Api.Contacts.Models;
 
 public class ContactUpsertDto
 {
-    public int Id { get; set; }
+    //Id property should be disabled for PUT request - not to map empty id in case not provided in request body
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

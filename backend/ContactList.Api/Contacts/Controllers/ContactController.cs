@@ -42,10 +42,10 @@ public class ContactController : ControllerBase
     }
 
     [HttpPut("{contactId}")]
-    public IActionResult Put(int contactId, ContactUpsertDto contactUpsertDto)
+    public IActionResult Put(ContactUpsertDto contactUpsertDto, int contactId)
     {
         _validatorContactUpsertDto.ValidateAndThrow(contactUpsertDto);
-        _contactService.UpdateContact(contactId, contactUpsertDto);
+        _contactService.UpdateContact(contactUpsertDto, contactId);
 
         return Ok(_contactService.GetContact(contactId));
     }

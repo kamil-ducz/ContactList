@@ -30,6 +30,7 @@ public class ContactRepository : IContactRepository
     public void UpdateContact(Contact contact)
     {
         _contactListDbContext.Contacts.Update(contact);
+        _contactListDbContext.SaveChanges();
     }
 
     public void DeleteContact(Contact contact)
