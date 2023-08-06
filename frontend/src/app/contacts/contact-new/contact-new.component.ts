@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ContactCategory } from 'src/app/models/contact.category.model';
 import { Contact } from 'src/app/models/contact.model';
 import { ContactSubCategory } from 'src/app/models/contact.sub.category.model';
+import { ContactsService } from 'src/app/services/contacts.service';
 import { DictionaryService } from 'src/app/services/dictionary.service';
+import { passwordValidator } from './password.validator';
+import { dateOfBirthValidator } from './date.of.birth.validator';
 
 @Component({
   selector: 'app-contact-new',
@@ -11,7 +16,54 @@ import { DictionaryService } from 'src/app/services/dictionary.service';
   styleUrls: ['./contact-new.component.css']
 })
 export class ContactNewComponent implements OnInit {
-  constructor(private dictionaryService: DictionaryService) {}
+  constructor(
+    private contactService: ContactsService,
+    private dictionaryService: DictionaryService,
+    private toastr: ToastrService,
+    private router: Router
+    ) 
+    {
+      this.newContactFormGroup = new FormGroup({
+        firstName: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(15)
+        ]),
+        lastName: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+        ]),
+        email: new FormControl('', [
+          Validators.required,
+          Validators.email,
+          Validators.minLength(10),
+          Validators.maxLength(30)     
+        ]),
+        password: new FormControl('', [
+          Validators.required,
+          passwordValidator()
+        ]),
+        category: new FormControl('', [
+          Validators.required
+        ]),
+        subCategory: new FormControl({ value: '', disabled: true }, [
+        ]),
+        phoneNumber: new FormControl('', [
+          Validators.required,
+          Validators.minLength(9),
+          Validators.maxLength(20)
+        ]),
+        dateOfBirth: new FormControl('2000-01-01', [
+          Validators.required,
+          dateOfBirthValidator()
+        ])
+      });
+    }
+
+  get f() {
+    return this.newContactFormGroup.controls;
+  }
 
   contactCategories: ContactCategory[] = [];
   contactSubCategories: ContactSubCategory[] = [];
@@ -21,7 +73,6 @@ export class ContactNewComponent implements OnInit {
   ngOnInit(): void {
     this.fetchContactCategories();
     this.fetchContactSubCategories();
-    this.initializeContactFormGroup();
   }
 
   async fetchContactCategories(): Promise<void> {
@@ -40,11 +91,6 @@ export class ContactNewComponent implements OnInit {
     );
   }
 
-  findSubCategoryNameById(subCategoryId: number): string {
-    const subCategory = this.contactSubCategories.find(sc => sc.id === subCategoryId);
-    return subCategory ? subCategory.name : 'Sub category not found. It is available only for Work category';
-  }
-
   onCategoryChange(): void {
     const selectedCategoryId = this.newContactFormGroup.get('category')?.value;
     const isCategoryWork = selectedCategoryId === 2;
@@ -56,48 +102,14 @@ export class ContactNewComponent implements OnInit {
     }
   }
 
-  async initializeContactFormGroup(): Promise<void> {
-    this.newContactFormGroup = new FormGroup({
-      firstName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(15)
-      ]),
-      lastName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ]),
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email,
-        Validators.minLength(10),
-        Validators.maxLength(30)     
-      ]),
-      password: new FormControl('', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(100),
-        // TODO regex like in Fluent Validation on backend
-      ]),
-      category: new FormControl('', [
-        Validators.required
-      ]),
-      subCategory: new FormControl({ value: '', disabled: true }, [
-      ]),
-      phoneNumber: new FormControl('', [
-        Validators.required,
-        Validators.minLength(9),
-        Validators.maxLength(20)
-      ]),
-      dateOfBirth: new FormControl('', [
-        Validators.required,
-        // TODO 100 years old condition
-      ])
-    });
-  }
-
   onSubmitNewContact(newContact: Contact) {
-    // TODO: Implement the logic to save the contact data
+    newContact.categoryId = +newContact.category; // use unary operator to parse string to int
+    newContact.subCategoryId = +newContact.subCategory;
+    this.contactService.postContact(newContact).subscribe(
+      (response: Contact) => {
+        this.toastr.success(`Contact ${response.firstName} ${response.lastName} added successfully`);
+        this.router.navigate(['/contacts']);
+      }
+    )
   }
 }
