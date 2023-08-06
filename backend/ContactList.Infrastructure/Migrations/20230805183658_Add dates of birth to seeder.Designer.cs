@@ -4,6 +4,7 @@ using ContactList.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactList.Infrastructure.Migrations
 {
     [DbContext(typeof(ContactListDbContext))]
-    partial class ContactListDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230805183658_Add dates of birth to seeder")]
+    partial class Adddatesofbirthtoseeder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

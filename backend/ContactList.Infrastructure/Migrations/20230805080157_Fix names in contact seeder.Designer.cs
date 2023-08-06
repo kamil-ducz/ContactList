@@ -4,6 +4,7 @@ using ContactList.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactList.Infrastructure.Migrations
 {
     [DbContext(typeof(ContactListDbContext))]
-    partial class ContactListDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230805080157_Fix names in contact seeder")]
+    partial class Fixnamesincontactseeder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +75,7 @@ namespace ContactList.Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            DateOfBirth = new DateTime(1999, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "john.smith@gmail.com",
                             FirstName = "John",
                             LastName = "Smith",
@@ -83,7 +86,7 @@ namespace ContactList.Infrastructure.Migrations
                         {
                             Id = 2,
                             CategoryId = 2,
-                            DateOfBirth = new DateTime(1980, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jack.dean@gmail.com",
                             FirstName = "Jack",
                             LastName = "Dean",
@@ -95,7 +98,7 @@ namespace ContactList.Infrastructure.Migrations
                         {
                             Id = 3,
                             CategoryId = 2,
-                            DateOfBirth = new DateTime(1985, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "eg@gmail.com",
                             FirstName = "Edgar",
                             LastName = "Gold",
@@ -107,7 +110,7 @@ namespace ContactList.Infrastructure.Migrations
                         {
                             Id = 4,
                             CategoryId = 3,
-                            DateOfBirth = new DateTime(1971, 6, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "rsapphire@gmail.com",
                             FirstName = "Roger",
                             LastName = "Sapphire",

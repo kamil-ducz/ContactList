@@ -1,7 +1,6 @@
 ﻿using ContactList.Api.Contacts.Models;
 using FluentValidation;
 using System;
-using System.Text.RegularExpressions;
 
 namespace ContactList.Api.Contacts.Validators;
 
@@ -22,13 +21,13 @@ public class ContactUpsertDtoValidator : AbstractValidator<ContactUpsertDto>
         RuleFor(r => r.Email)
             .NotEmpty().WithMessage("Email cannot be empty")
             .EmailAddress().WithMessage("Email has to be in email format")
-            .MinimumLength(3).WithMessage("Email has to be at least 3 characters long")
+            .MinimumLength(10).WithMessage("Email has to be at least 3 characters long")
             .MaximumLength(30).WithMessage("Email has to be max 30 characters long")
             ;
         RuleFor(r => r.Password)
             .NotEmpty().WithMessage("Password cannot be empty")
             .MinimumLength(8).WithMessage("Password has to be at least 8 characters long")
-            .MaximumLength(16).WithMessage("Password has to be max 16 characters long")
+            .MaximumLength(100).WithMessage("Password has to be max 16 characters long")
             .Matches(@"[A-Z]+").WithMessage("Password has to contain at least one uppercase letter")
             .Matches(@"[a-z]+").WithMessage("Password has to contain at least one lowercase letter")
             .Matches(@"[0-9]+").WithMessage("Password has to contain at least one number")
@@ -40,19 +39,30 @@ public class ContactUpsertDtoValidator : AbstractValidator<ContactUpsertDto>
             .LessThanOrEqualTo(3).WithMessage("CategoryId has to be less than or equal to 3")
             ;
         RuleFor(r => r.SubCategoryId)
-            .GreaterThanOrEqualTo(1).When(s => s is not null).WithMessage("CategoryId has to be greater than or equal to 1")
-            .LessThanOrEqualTo(3).When(s => s is not null).WithMessage("CategoryId has to be less than or equal to 3")
-            ;
+            .Must((request, subCategoryId) =>
+            {
+                // Allow inserting SubCategoryId only if CategoryId is equal to 2
+                if ((request.CategoryId >= 1 && request.CategoryId <= 3) && subCategoryId == null)
+                {
+                    return true;
+                }
+                if (request.CategoryId == 2 && subCategoryId != null)
+                {
+                    return true;
+                }
+                return false;
+            })
+            .WithMessage("SubCategoryId can only be inserted when CategoryId is equal to 2.");
         RuleFor(r => r.PhoneNumber)
            .NotEmpty()
            .NotNull().WithMessage("Phone number cannot be empty")
-           .MinimumLength(10).WithMessage("Phone number must not be less than 10 characters")
-           .MaximumLength(20).WithMessage("Phone number must not exceed 50 characters")
-           .Matches(new Regex(@"((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}")).WithMessage("Phone number not valid")
+           .MinimumLength(9).WithMessage("Phone number has to be at least 9 characters long")
+           .MaximumLength(20).WithMessage("Phone number has to be max 20 characters long")
            ;
         RuleFor(r => r.DateOfBirth)
             .NotEmpty().WithMessage("Date of birth cannot be empty")
             .GreaterThanOrEqualTo(DateTime.Now.AddDays(-36500)).WithMessage("You are older than 100 years, you are greater than this application master")
             ;
+        ;
     }
 }
