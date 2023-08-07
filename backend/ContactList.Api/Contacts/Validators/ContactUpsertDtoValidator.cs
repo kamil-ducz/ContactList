@@ -31,7 +31,7 @@ public class ContactUpsertDtoValidator : AbstractValidator<ContactUpsertDto>
             .Matches(@"[A-Z]+").WithMessage("Password has to contain at least one uppercase letter")
             .Matches(@"[a-z]+").WithMessage("Password has to contain at least one lowercase letter")
             .Matches(@"[0-9]+").WithMessage("Password has to contain at least one number")
-            .Matches(@"[\!\?\*\.]+").WithMessage("Password has to contain at least one (!? *.)")
+            .Matches(@"[\!\?\*\.\$]+").WithMessage("Password has to contain at least one !?*.$")
             ;
         RuleFor(r => r.CategoryId)
             .NotEmpty().WithMessage("CategoryId cannot be empty")

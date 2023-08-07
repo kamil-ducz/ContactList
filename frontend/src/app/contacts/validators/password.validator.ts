@@ -34,7 +34,7 @@ export function passwordValidator(): ValidatorFn {
     }
 
     // Password has to contain at least one special character (!?*.)
-    if (!/[\!\?\*\.]+/.test(value)) {
+    if (!/[\!\?\*\.\$]+/.test(value)) {
       return { specialCharacter: true };
     }
 
