@@ -106,6 +106,7 @@ export class ContactDetailsComponent implements OnInit {
     if (isCategoryWork) {
       this.contactDetailsFormGroup.get('subCategory')?.enable();
     } else {
+      this.contactDetailsFormGroup.patchValue({ 'subCategory': null });
       this.contactDetailsFormGroup.get('subCategory')?.disable();
     }
   }
@@ -119,18 +120,10 @@ export class ContactDetailsComponent implements OnInit {
     return isCategoryWork;
   }
 
-  onSubmitContactDetails(contactDetails: Contact) {
-    contactDetails.categoryId = +contactDetails.category; // use unary operator to parse string to int
-    contactDetails.subCategoryId = +contactDetails.subCategory;
-    this.contactService.updateContact(contactDetails, this.currentContactId).subscribe(
-      () => {
-        this.toastr.success(`Contact ${this.currentContact.firstName} ${this.currentContact.lastName} updated successfully`);
-        this.refreshComponent();
-      }
-    )
-  }
-
   async initializeContactFormGroup() {
+     const contactCategory = this.contactCategories.find(cc => cc.id === this.currentContact.categoryId)?.name;
+     const contactSubCategory = this.contactSubCategories.find(csc => csc.id === this.currentContact.subCategoryId)?.name;
+    
     this.contactDetailsFormGroup = new FormGroup({
       firstName: new FormControl(this.currentContact?.firstName || '', [
         Validators.required,
@@ -152,10 +145,10 @@ export class ContactDetailsComponent implements OnInit {
         Validators.required,
         passwordValidator()
       ]),
-      category: new FormControl(this.currentContact?.category || '', [
+      category: new FormControl(contactCategory, [
         Validators.required
       ]),
-      subCategory: new FormControl(this.currentContact?.subCategory || '', [        
+      subCategory: new FormControl(contactSubCategory, [        
       ]),
       phoneNumber: new FormControl(this.currentContact?.phoneNumber || '', [
         Validators.required,
@@ -178,6 +171,30 @@ export class ContactDetailsComponent implements OnInit {
       () => {
         this.toastr.success(`Contact ${this.currentContact.firstName} ${this.currentContact.lastName} deleted successfully`);
         this.router.navigate(['contacts']);
+      }
+    )
+  }
+
+  onSubmitContactDetails(contactDetails: Contact) {
+    const currentContactCategory = this.contactDetailsFormGroup.get("category")?.value;
+    if (currentContactCategory !== undefined) {
+      const matchingCategory = this.contactCategories.find(cc => cc.name === currentContactCategory);
+      if (matchingCategory) {
+        contactDetails.categoryId = matchingCategory.id;
+      }
+    }
+    const currentContactSubCategory = this.contactDetailsFormGroup.get("subCategory")?.value;
+    if (currentContactSubCategory !== undefined) {
+      const matchingSubCategory = this.contactSubCategories.find(cc => cc.name === currentContactSubCategory);
+      if (matchingSubCategory) {
+        contactDetails.subCategoryId = matchingSubCategory.id;
+      }
+    }
+    
+    this.contactService.updateContact(contactDetails, this.currentContactId).subscribe(
+      () => {
+        this.toastr.success(`Contact ${this.currentContact.firstName} ${this.currentContact.lastName} updated successfully`);
+        this.refreshComponent();
       }
     )
   }

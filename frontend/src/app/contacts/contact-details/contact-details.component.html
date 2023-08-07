@@ -43,7 +43,9 @@
     <div class="form-group">
         <label>Contact Category</label>
         <select formControlName="category" class="form-select" (change)="onCategoryChange()">
-            <option *ngFor="let category of contactCategories" [selected]="category.name === findCategoryNameById(currentContact.categoryId)" [ngValue]="category.id">{{ category.name }}</option>
+          <option>Private</option>
+          <option>Work</option>
+          <option>Other</option>          
         </select>
     </div>
     <div *ngIf="f['category'].errors && (f['category'].dirty || f['category'].touched)">
@@ -52,9 +54,11 @@
     <div class="form-group">
         <label>Contact Sub-Category</label>
         <div>
-            <select formControlName="subCategory" class="form-select">
-                <option *ngFor="let subCategory of contactSubCategories" [selected]="subCategory.name === findSubCategoryNameById(currentContact.categoryId)" [ngValue]="subCategory.id">{{ subCategory.name }}</option>
-            </select>
+          <select formControlName="subCategory" class="form-select">
+            <option>Client</option>
+            <option>Boss</option>
+            <option>Other</option>         
+          </select>
         </div>
     </div>
     <div *ngIf="f['subCategory'].errors && (f['subCategory'].dirty || f['subCategory'].touched)">
