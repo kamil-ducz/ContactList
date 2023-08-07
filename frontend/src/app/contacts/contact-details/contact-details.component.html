@@ -3,43 +3,86 @@
       <label>First Name</label>
       <input type="text" minlength="3" maxlength="15" class="form-control" formControlName="firstName">
     </div>
+    <div *ngIf="f['firstName'].errors && (f['firstName'].dirty || f['firstName'].touched)">
+        <div *ngIf="f['firstName'].errors['required']" class="text-danger">First Name is required</div>
+        <div *ngIf="f['firstName'].errors['minlength']" class="text-danger">First Name should be at least 3 characters long</div>
+        <div *ngIf="f['firstName'].errors['maxlength']" class="text-danger">First Name cannot exceed 15 characters</div>
+      </div>
     <div class="form-group">
       <label>Last Name</label>
       <input type="text" minlength="3" maxlength="30" class="form-control" formControlName="lastName">
     </div>
+    <div *ngIf="f['lastName'].errors && (f['lastName'].dirty || f['lastName'].touched)">
+        <div *ngIf="f['lastName'].errors['required']" class="text-danger">Last Name is required</div>
+        <div *ngIf="f['lastName'].errors['minlength']" class="text-danger">Last Name should be at least 3 characters long</div>
+        <div *ngIf="f['lastName'].errors['maxlength']" class="text-danger">Last Name cannot exceed 50 characters</div>
+      </div>
     <div class="form-group">
       <label>Email</label>
       <input type="email" minlength="10" maxlength="30" class="form-control" formControlName="email">
     </div>
+    <div *ngIf="f['email'].errors && (f['email'].dirty || f['email'].touched)">
+        <div *ngIf="f['email'].errors['required']" class="text-danger">Email is required</div>
+        <div *ngIf="f['email'].errors['email']" class="text-danger">Invalid email format</div>
+        <div *ngIf="f['email'].errors['minlength']" class="text-danger">Email must be at least 10 characters long</div>
+        <div *ngIf="f['email'].errors['maxlength']" class="text-danger">Email cannot be longer than 30 characters</div>
+      </div>
     <div class="form-group">
         <label>Password</label>
         <input type="password" minlength="8" maxlength="100" class="form-control" formControlName="password">
     </div>
+    <div *ngIf="f['password'].errors && (f['password'].dirty || f['password'].touched)">
+        <div *ngIf="f['password'].errors['required']" class="text-danger">Password is required</div>
+        <div *ngIf="f['password'].errors['minlength']" class="text-danger">Password has to be at least 8 characters long</div>
+        <div *ngIf="f['password'].errors['maxlength']" class="text-danger">Password has to be max 100 characters long</div>
+        <div *ngIf="f['password'].errors['uppercase']" class="text-danger">Password has to contain at least one uppercase letter</div>
+        <div *ngIf="f['password'].errors['lowercase']" class="text-danger">Password has to contain at least one lowercase letter</div>
+        <div *ngIf="f['password'].errors['number']" class="text-danger">Password has to contain at least one number</div>
+        <div *ngIf="f['password'].errors['specialCharacter']" class="text-danger">Password has to contain at least one (!?*.)</div>
+      </div> 
     <div class="form-group">
         <label>Contact Category</label>
         <select formControlName="category" class="form-select" (change)="onCategoryChange()">
-            <option *ngFor="let category of contactCategories" [selected]="category.name === findCategoryNameById(currentContact.categoryId)">{{ category.name }}</option>
+          <option>Private</option>
+          <option>Work</option>
+          <option>Other</option>          
         </select>
     </div>
+    <div *ngIf="f['category'].errors && (f['category'].dirty || f['category'].touched)">
+        <div *ngIf="f['category'].errors['required']" class="text-danger">Category is required</div>
+      </div>   
     <div class="form-group">
         <label>Contact Sub-Category</label>
         <div>
-            <select formControlName="subCategory" class="form-select">
-                <option *ngFor="let subCategory of contactSubCategories" [selected]="subCategory.name === findSubCategoryNameById(currentContact.categoryId)">{{ subCategory.name }}</option>
-            </select>
+          <select formControlName="subCategory" class="form-select">
+            <option>Client</option>
+            <option>Boss</option>
+            <option>Other</option>         
+          </select>
         </div>
     </div>
+    <div *ngIf="f['subCategory'].errors && (f['subCategory'].dirty || f['subCategory'].touched)">
+        <div *ngIf="f['category'].value === 2">For Work category Sub Category is required</div>
+      </div>  
     <div class="form-group">
         <label>Phone Number</label>
         <input type="text" minlength="9" maxlength="20" class="form-control" formControlName="phoneNumber">
     </div>
+    <div *ngIf="f['phoneNumber'].errors && (f['phoneNumber'].dirty || f['phoneNumber'].touched)">
+        <div *ngIf="f['phoneNumber'].errors['required']" class="text-danger">Phone Number is required</div>
+        <div *ngIf="f['phoneNumber'].errors['minlength']" class="text-danger">Phone Number must be at least 9 characters long</div>
+        <div *ngIf="f['phoneNumber'].errors['maxlength']" class="text-danger">Phone Number cannot be longer than 20 characters</div>
+      </div> 
     <div class="form-group">
         <label>Date of Birth</label>
-        <input type="text" class="form-control" formControlName="dateOfBirth">
+        <input type="date" class="form-control" formControlName="dateOfBirth">
     </div>
-    <button type="submit" class="btn btn-success my-4">Save changes</button>
+    <div *ngIf="f['dateOfBirth'].errors && (f['dateOfBirth'].dirty || f['dateOfBirth'].touched)">
+        <div *ngIf="f['dateOfBirth'].errors['required']" class="text-danger">Date of birth is required</div>
+        <div *ngIf="f['dateOfBirth'].errors['futureDate']" class="text-danger">Date of birth cannot be in the future</div>
+        <div *ngIf="f['dateOfBirth'].errors['olderThan100Years']" class="text-danger">You are older than 100 years - congratulations!</div>
+      </div>
+    <button type="submit" class="btn btn-success my-4" [disabled]="!contactDetailsForm.valid">Save changes</button>
     <button type="button" (click)="removeContact(currentContactId)" class="btn btn-danger mx-4">Delete Contact</button>
     <a href="#" class="btn btn-warning mx-4">Return to main page</a>
   </form>
-
-  currentContactId = {{ currentContactId }}

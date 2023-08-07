@@ -21,7 +21,7 @@ public class ContactDtoValidator : AbstractValidator<ContactDto>
         RuleFor(r => r.Email)
             .NotEmpty().WithMessage("Email cannot be empty")
             .EmailAddress().WithMessage("Email has to be in email format")
-            .MinimumLength(10).WithMessage("Email has to be at least 3 characters long")
+            .MinimumLength(10).WithMessage("Email has to be at least 10 characters long")
             .MaximumLength(30).WithMessage("Email has to be max 30 characters long")
             ;
         RuleFor(r => r.Password)
@@ -31,7 +31,7 @@ public class ContactDtoValidator : AbstractValidator<ContactDto>
             .Matches(@"[A-Z]+").WithMessage("Password has to contain at least one uppercase letter")
             .Matches(@"[a-z]+").WithMessage("Password has to contain at least one lowercase letter")
             .Matches(@"[0-9]+").WithMessage("Password has to contain at least one number")
-            .Matches(@"[\!\?\*\.]+").WithMessage("Password has to contain at least one (!? *.)")
+            .Matches(@"[\!\?\*\.\$]+").WithMessage("Password has to contain at least one !?*.$")
             ;
         RuleFor(r => r.CategoryId)
             .NotEmpty().WithMessage("CategoryId cannot be empty")
@@ -61,6 +61,7 @@ public class ContactDtoValidator : AbstractValidator<ContactDto>
            ;
         RuleFor(r => r.DateOfBirth)
             .NotEmpty().WithMessage("Date of birth cannot be empty")
+            .LessThanOrEqualTo(DateTime.Now)
             .GreaterThanOrEqualTo(DateTime.Now.AddDays(-36500)).WithMessage("You are older than 100 years, you are greater than this application master")
             ;
         ;

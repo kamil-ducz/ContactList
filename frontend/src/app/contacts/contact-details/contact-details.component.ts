@@ -7,6 +7,8 @@ import { Contact } from 'src/app/models/contact.model';
 import { ContactSubCategory } from 'src/app/models/contact.sub.category.model';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { DictionaryService } from 'src/app/services/dictionary.service';
+import { passwordValidator } from '../validators/password.validator';
+import { dateOfBirthValidator } from '../validators/date.of.birth.validator';
 
 @Component({
   selector: 'app-contact-details',
@@ -93,8 +95,6 @@ export class ContactDetailsComponent implements OnInit {
     return subCategory ? subCategory.name : 'Sub category not found. It is available only for Work category';
   }
 
-  // TODO - onCategoryChange works fine only after user interaction on select element, just after initialization behavior is incorrect
-  // Probable cause is ngIf on form tag - it should be replaced by correction of asynchronous form initialization
   onCategoryChange() {
     // Check if the selected category is equal to Work
     const selectedCategory = this.contactDetailsFormGroup.get('category')?.value;
@@ -104,6 +104,7 @@ export class ContactDetailsComponent implements OnInit {
     if (isCategoryWork) {
       this.contactDetailsFormGroup.get('subCategory')?.enable();
     } else {
+      this.contactDetailsFormGroup.patchValue({ 'subCategory': null });
       this.contactDetailsFormGroup.get('subCategory')?.disable();
     }
   }
@@ -117,22 +118,22 @@ export class ContactDetailsComponent implements OnInit {
     return isCategoryWork;
   }
 
-  onSubmitContactDetails(contactDetails: Contact) {
-    // TODO
-  }
-
   async initializeContactFormGroup() {
-    const dateOfBirthString = this.currentContact.dateOfBirth;
-    const dateOfBirth = new Date(dateOfBirthString);
-    //const formattedDateOfBirth = this.datePipe.transform(dateOfBirth, 'short');
-    console.log("this.currentContact" + JSON.stringify(this.currentContact));
+     const contactCategory = this.contactCategories.find(cc => cc.id === this.currentContact.categoryId)?.name;
+     const contactSubCategory = this.contactSubCategories.find(csc => csc.id === this.currentContact.subCategoryId)?.name;
+     const dob = new Date(this.currentContact.dateOfBirth);
+     const dobYear = dob.getFullYear();
+     const dobMonth = (dob.getMonth() + 1).toString().padStart(2, "0");
+     const dobDay = dob.getDay().toString().padStart(2, "0");
+     const dateOfBirth = `${dobYear}-${dobMonth}-${dobDay}`;     
+    
     this.contactDetailsFormGroup = new FormGroup({
       firstName: new FormControl(this.currentContact?.firstName || '', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(15)
       ]),
-      lastName: new FormControl(this.currentContact.lastName, [
+      lastName: new FormControl(this.currentContact?.lastName || '', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
@@ -145,14 +146,12 @@ export class ContactDetailsComponent implements OnInit {
       ]),
       password: new FormControl(this.currentContact?.password || '', [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(100),
-        // TODO regex like in Fluent Validation on backend
+        passwordValidator()
       ]),
-      category: new FormControl(this.currentContact?.category || '', [
+      category: new FormControl(contactCategory, [
         Validators.required
       ]),
-      subCategory: new FormControl(this.currentContact?.subCategory || '', [        
+      subCategory: new FormControl(contactSubCategory, [        
       ]),
       phoneNumber: new FormControl(this.currentContact?.phoneNumber || '', [
         Validators.required,
@@ -161,9 +160,13 @@ export class ContactDetailsComponent implements OnInit {
       ]),
       dateOfBirth: new FormControl(dateOfBirth || '', [
         Validators.required,
-        // TODO 100 years old condition
+        dateOfBirthValidator()
       ])
     });
+  }
+
+  get f() {
+    return this.contactDetailsFormGroup.controls;
   }
 
   removeContact(contactId: number) {
@@ -171,6 +174,30 @@ export class ContactDetailsComponent implements OnInit {
       () => {
         this.toastr.success(`Contact ${this.currentContact.firstName} ${this.currentContact.lastName} deleted successfully`);
         this.router.navigate(['contacts']);
+      }
+    )
+  }
+
+  onSubmitContactDetails(contactDetails: Contact) {
+    const currentContactCategory = this.contactDetailsFormGroup.get("category")?.value;
+    if (currentContactCategory !== undefined) {
+      const matchingCategory = this.contactCategories.find(cc => cc.name === currentContactCategory);
+      if (matchingCategory) {
+        contactDetails.categoryId = matchingCategory.id;
+      }
+    }
+    const currentContactSubCategory = this.contactDetailsFormGroup.get("subCategory")?.value;
+    if (currentContactSubCategory !== undefined) {
+      const matchingSubCategory = this.contactSubCategories.find(cc => cc.name === currentContactSubCategory);
+      if (matchingSubCategory) {
+        contactDetails.subCategoryId = matchingSubCategory.id;
+      }
+    }
+    
+    this.contactService.updateContact(contactDetails, this.currentContactId).subscribe(
+      () => {
+        this.toastr.success(`Contact ${this.currentContact.firstName} ${this.currentContact.lastName} updated successfully`);
+        this.refreshComponent();
       }
     )
   }

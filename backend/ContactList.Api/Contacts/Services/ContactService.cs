@@ -52,6 +52,7 @@ public class ContactService : IContactService
     {
         var contact = _contactRepository.GetContact(contactId);
         _mapper.Map(contactDto, contact);
+        contact.Password = BCrypt.Net.BCrypt.HashPassword(contact.Password);
         _contactRepository.UpdateContact(contact);
     }
 
