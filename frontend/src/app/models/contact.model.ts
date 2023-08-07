@@ -9,5 +9,5 @@ export type Contact = {
     subCategory: string,
     subCategoryId: number,
     phoneNumber: string,
-    dateOfBirth: string    
+    dateOfBirth: Date    
 }

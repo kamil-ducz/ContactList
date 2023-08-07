@@ -7,6 +7,8 @@ import { Contact } from 'src/app/models/contact.model';
 import { ContactSubCategory } from 'src/app/models/contact.sub.category.model';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { DictionaryService } from 'src/app/services/dictionary.service';
+import { passwordValidator } from '../validators/password.validator';
+import { dateOfBirthValidator } from '../validators/date.of.birth.validator';
 
 @Component({
   selector: 'app-contact-details',
@@ -118,21 +120,24 @@ export class ContactDetailsComponent implements OnInit {
   }
 
   onSubmitContactDetails(contactDetails: Contact) {
-    // TODO
+    contactDetails.categoryId = +contactDetails.category; // use unary operator to parse string to int
+    contactDetails.subCategoryId = +contactDetails.subCategory;
+    this.contactService.updateContact(contactDetails, this.currentContactId).subscribe(
+      () => {
+        this.toastr.success(`Contact ${this.currentContact.firstName} ${this.currentContact.lastName} updated successfully`);
+        this.refreshComponent();
+      }
+    )
   }
 
   async initializeContactFormGroup() {
-    const dateOfBirthString = this.currentContact.dateOfBirth;
-    const dateOfBirth = new Date(dateOfBirthString);
-    //const formattedDateOfBirth = this.datePipe.transform(dateOfBirth, 'short');
-    console.log("this.currentContact" + JSON.stringify(this.currentContact));
     this.contactDetailsFormGroup = new FormGroup({
       firstName: new FormControl(this.currentContact?.firstName || '', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(15)
       ]),
-      lastName: new FormControl(this.currentContact.lastName, [
+      lastName: new FormControl(this.currentContact?.lastName || '', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
@@ -145,9 +150,7 @@ export class ContactDetailsComponent implements OnInit {
       ]),
       password: new FormControl(this.currentContact?.password || '', [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(100),
-        // TODO regex like in Fluent Validation on backend
+        passwordValidator()
       ]),
       category: new FormControl(this.currentContact?.category || '', [
         Validators.required
@@ -159,11 +162,15 @@ export class ContactDetailsComponent implements OnInit {
         Validators.minLength(9),
         Validators.maxLength(20)
       ]),
-      dateOfBirth: new FormControl(dateOfBirth || '', [
+      dateOfBirth: new FormControl(this.currentContact?.dateOfBirth || '', [
         Validators.required,
-        // TODO 100 years old condition
+        dateOfBirthValidator()
       ])
     });
+  }
+
+  get f() {
+    return this.contactDetailsFormGroup.controls;
   }
 
   removeContact(contactId: number) {

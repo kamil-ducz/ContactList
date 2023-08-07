@@ -7,8 +7,8 @@ import { Contact } from 'src/app/models/contact.model';
 import { ContactSubCategory } from 'src/app/models/contact.sub.category.model';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { DictionaryService } from 'src/app/services/dictionary.service';
-import { passwordValidator } from './password.validator';
-import { dateOfBirthValidator } from './date.of.birth.validator';
+import { passwordValidator } from '../validators/password.validator';
+import { dateOfBirthValidator } from '../validators/date.of.birth.validator';
 
 @Component({
   selector: 'app-contact-new',
