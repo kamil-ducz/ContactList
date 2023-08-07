@@ -95,8 +95,6 @@ export class ContactDetailsComponent implements OnInit {
     return subCategory ? subCategory.name : 'Sub category not found. It is available only for Work category';
   }
 
-  // TODO - onCategoryChange works fine only after user interaction on select element, just after initialization behavior is incorrect
-  // Probable cause is ngIf on form tag - it should be replaced by correction of asynchronous form initialization
   onCategoryChange() {
     // Check if the selected category is equal to Work
     const selectedCategory = this.contactDetailsFormGroup.get('category')?.value;
@@ -123,6 +121,11 @@ export class ContactDetailsComponent implements OnInit {
   async initializeContactFormGroup() {
      const contactCategory = this.contactCategories.find(cc => cc.id === this.currentContact.categoryId)?.name;
      const contactSubCategory = this.contactSubCategories.find(csc => csc.id === this.currentContact.subCategoryId)?.name;
+     const dob = new Date(this.currentContact.dateOfBirth);
+     const dobYear = dob.getFullYear();
+     const dobMonth = (dob.getMonth() + 1).toString().padStart(2, "0");
+     const dobDay = dob.getDay().toString().padStart(2, "0");
+     const dateOfBirth = `${dobYear}-${dobMonth}-${dobDay}`;     
     
     this.contactDetailsFormGroup = new FormGroup({
       firstName: new FormControl(this.currentContact?.firstName || '', [
@@ -155,7 +158,7 @@ export class ContactDetailsComponent implements OnInit {
         Validators.minLength(9),
         Validators.maxLength(20)
       ]),
-      dateOfBirth: new FormControl(this.currentContact?.dateOfBirth || '', [
+      dateOfBirth: new FormControl(dateOfBirth || '', [
         Validators.required,
         dateOfBirthValidator()
       ])
