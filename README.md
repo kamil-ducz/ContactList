@@ -1,5 +1,8 @@
 # ContactList Local Setup
+## Purpose
+This project is a full-stack application that connects a .NET backend, an Angular frontend, and a SQL database. It demonstrates data mapping from C# code to a SQL database using Entity Framework, and connects these components with Angular services and a simple user interface. The application allows users to add, view, and edit contacts organized by categories.
 
+## Steps
 1. Download repository - master or development branch.
 4. In backend folder open solution in your .NET IDE.
 5. Use Package Manager Console and launch command 'update-database' to let Entity Framework create and populate database. Use Default project: ContactList.Infrastructure not Api.
