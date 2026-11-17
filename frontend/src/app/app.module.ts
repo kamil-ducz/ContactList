@@ -14,6 +14,7 @@ import { ContactDetailsComponent } from './contacts/contact-details/contact-deta
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ContactNewComponent } from './contacts/contact-new/contact-new.component';
 import { LoginComponent } from './login/login.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { LoginComponent } from './login/login.component';
     HeaderComponent,
     ContactDetailsComponent,
     ContactNewComponent,
-    LoginComponent
+    LoginComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
