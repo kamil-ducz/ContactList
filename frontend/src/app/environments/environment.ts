@@ -5,7 +5,7 @@
 export const environment = {
   production: false,  
 
-  apiBaseUrl: 'https://localhost:7120/api/'
+  apiBaseUrl: 'https://contactlist-backend-b0e3d2cabyhzdgcz.polandcentral-01.azurewebsites.net/api/'
 };
 
 /*
